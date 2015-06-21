@@ -7,15 +7,31 @@ var CANVAS_HEIGHT = 500,
 socket.on("hello", function(data){
 	$("#ID").text(data.id)
 	$(".curtain").slideUp()
-	gameStart(data.id)
+	gameStart(data.id, data.players)
 });
 
 function getPlayer(pid){
 	return Crafty("P:" + pid)
 }
 
-function gameStart(pid) {
+function makeEnemy(data){
+	var id_tag = "P:" + data.pid
+	Crafty.e("2D, DOM, Color, Text, Enemy")
+	.color('rgb(255,0,0)')
+	.attr({ x: data.x, y: data.y, w: 50, h: 50 })
+	.text(id_tag)
+	.addComponent(id_tag)
+}
+
+function gameStart(pid, players) {
 	var PLAYER_ID = pid;
+
+	Crafty.init(CANVAS_WIDTH, CANVAS_HEIGHT, document.getElementById('game'));
+
+	// Make existing players
+	for (var i in players){
+		makeEnemy(players[i])
+	}
 
 	// SUBSCRIPTIONS
 	socket.on("newplayer", function(data){
@@ -25,24 +41,19 @@ function gameStart(pid) {
 		getPlayer(data.pid).destroy()
 	});
 	socket.on("locupdate", function(data){
-		var id_tag = "P:" + data.pid
-		if (Crafty(id_tag).length == 0){   // If it doesn't exist, make it
+		var player = getPlayer(data.pid)
+		if (player.length == 0){   // If it doesn't exist, make it
 			console.log("making new player")
-			Crafty.e("2D, DOM, Color, Text, Enemy")
-			.color('rgb(255,0,0)')
-			.attr({ x: data.x, y: data.y, w: 50, h: 50 })
-			.text(id_tag)
-			.addComponent(id_tag)
+			makeEnemy(data)
 		} else {    // Otherwise update it
-			Crafty(id_tag).x = data.x
-			Crafty(id_tag).y = data.y
+			player.x = data.x
+			player.y = data.y
 		}
 
 	})
 
-	// GAME LOGIC
-	Crafty.init(CANVAS_WIDTH, CANVAS_HEIGHT, document.getElementById('game'));
 
+	// GAME LOGIC
 	Crafty.c("LocTracker", {
 	    init: function() {
 	    	var count = 0
