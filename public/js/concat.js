@@ -85,7 +85,9 @@ function gameStart(pid, players) {
 		console.log(data.msg)
 	});
 	socket.on("playerleft", function(data){
-		getPlayer(data.pid).destroy()
+		getPlayer(data.pid)
+		.unbind("EnterFrame")
+		.destroy()
 	});
 	socket.on("locupdate", function(data){
 		var player = getPlayer(data.pid)
@@ -135,14 +137,13 @@ function gameStart(pid, players) {
 
 	Crafty.e("2D, DOM, Color, Fourway, LocTracker, Text, Player, Collision")
 	.color('rgb(0,255,0)')
-	.attr({ x: Math.random() * CANVAS_HEIGHT, y:  Math.random() * CANVAS_WIDTH, w: 50, h: 50 })
+	.attr({ x: 100 + Math.random() * (CANVAS_HEIGHT - 200), y:  100 + Math.random() * (CANVAS_WIDTH - 200), w: 50, h: 50 })
 	.fourway(4)
-	.onHit("Enemy", function(){
-		console.log("COLLISION!!!!")
-		this.dX *= -1
-		this.dY *= -1
+	.bind('Moved', function(from) {
+	    if(this.hit('Enemy')){
+	        this.attr({x: from.x, y:from.y});
+	    }
 	})
-	
 }
 
 
