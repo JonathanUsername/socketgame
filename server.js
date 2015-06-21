@@ -25,11 +25,13 @@ app.configure(function(){
 	app.use(device.capture());
 });
 
+var DEV = true;
 
 // logs every request
 app.use(function(req, res, next){
 	// output every request in the array
-	console.log({method:req.method, url: req.url, device: req.device});
+	if (DEV)
+		console.log({method:req.method, url: req.url, device: req.device});
 	// goes onto the next function in line
 	next();
 });
@@ -42,13 +44,14 @@ io.sockets.on('connection', function (socket) {
 	io.sockets.socket(socket.id).emit("hello", { id: socket.id });
 	io.sockets.emit('newplayer', { msg:"New Player entered - " + socket.id });
 	socket.on('loc', function(data, fn){
-		console.log("Got message: %s", data);
 		data.pid = socket.id
 		io.sockets.emit('locupdate', data);
 		fn();//callback
 	});
+	socket.on('disconnect', function (data) {
+		io.sockets.emit('playerleft', { pid: socket.id });
+	});
 });
-
 
 server.listen(runningPortNumber);
 
