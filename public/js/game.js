@@ -27,6 +27,7 @@ function gameStart(pid, players) {
 	var PLAYER_ID = pid;
 
 	Crafty.init(CANVAS_WIDTH, CANVAS_HEIGHT, document.getElementById('game'));
+	Crafty.canvas.init()
 
 	// Make existing players
 	for (var i in players){
@@ -94,7 +95,8 @@ function gameStart(pid, players) {
 	.fourway(4)
 	.bind('Moved', function(from) {
 	    if(this.hit('Enemy')){
-	        this.attr({x: from.x, y:from.y});
+	    	console.log("collision!")
+	        // this.attr({x: from.x, y:from.y});
 	    }
 	})
 }

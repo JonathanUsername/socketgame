@@ -208,4 +208,21 @@ module.exports = function (grunt) {
 
   grunt.registerTask('default', ['build', 'concurrent']);
 
+  // To install dependencies: 
+  /*
+
+sudo apt-get install git &&
+git clone https://github.com/JonathanUsername/socketgame.git &&
+sudo apt-get install nodejs &&
+sudo apt-get update &&
+sudo apt-get install npm &&
+sudo ln -s `which nodejs` /usr/bin/node &&
+npm install &&
+npm install -g grunt-cli &&
+npm install -g bower &&
+bower install --allow-root 
+grunt
+
+  */
+
 };
