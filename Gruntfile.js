@@ -132,7 +132,7 @@ module.exports = function (grunt) {
       options: {
         port: RUNNING_PORT,//variable at top of this file
         // change this to '0.0.0.0' to access the server from outside
-        hostname: 'localhost'
+        hostname: '0.0.0.0'
       },
       livereload: {
         options: {
@@ -169,7 +169,7 @@ module.exports = function (grunt) {
     // 'launch' will just kick it off, and won't stay running
     concurrent: {
         target: {
-            tasks: ['nodemon', 'watch', 'launch'],
+            tasks: ['nodemon', 'watch'],
             options: {
                 logConcurrentOutput: true
             }
@@ -194,7 +194,7 @@ module.exports = function (grunt) {
 
     open: {
       server: {
-        path: 'http://localhost:' + RUNNING_PORT
+        path: 'http://0.0.0.0:' + RUNNING_PORT
       }
     }
 

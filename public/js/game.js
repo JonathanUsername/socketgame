@@ -47,7 +47,7 @@ function gameStart(pid, players) {
 		if (player.length == 0){   // If it doesn't exist, make it
 			console.log("making new player")
 			makeEnemy(data)
-		} else {    // Otherwise update it
+		} else if (!player.has("Player")) {    // Otherwise update it if it's not ourself
 			player.x = data.x
 			player.y = data.y
 		}
